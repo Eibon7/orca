@@ -5,6 +5,7 @@ import { useTranslate } from '@/i18n/use-translate'
 import { useAppStore } from '@/store/index'
 import { EMPTY_FORM, type EditingTarget } from '../../../ssh-host-form/ssh-target-draft'
 import type { SshConfigHostSummary } from '../../../../../../shared/ssh-types'
+import { REMOTE_HOSTS_ENABLED } from '../../../../../../shared/graphito-fork-disabled-features'
 import { parseHostAccessLink } from '../../../../../../shared/remote-runtime/pairing/remote-pairing-address'
 import {
   translateHostAccessLinkError,
@@ -36,7 +37,10 @@ export function AddRemoteHostDialog({
   onOpenChange
 }: AddRemoteHostDialogProps): React.JSX.Element {
   const t = useTranslate()
-  const open = mode !== null
+  // Backstop for any add-host trigger this fork's UI-hiding missed: SSH/paired
+  // remote servers are out of scope here regardless of how 'ssh'/'server' mode
+  // was requested. WSL is unrelated (local execution) and stays unaffected.
+  const open = mode !== null && (REMOTE_HOSTS_ENABLED || mode === 'wsl')
   // Latch non-null mode so the closing animation cannot flash SSH fields after mode clears.
   const [renderMode, setRenderMode] = useState<AddRemoteHostMode>(mode ?? 'ssh')
   if (mode !== null && mode !== renderMode) {

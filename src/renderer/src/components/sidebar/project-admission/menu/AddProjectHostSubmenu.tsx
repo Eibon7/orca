@@ -16,6 +16,7 @@ import { useBoundedHostRows } from '@/components/host-picker/use-bounded-host-ro
 import { useTranslate } from '@/i18n/use-translate'
 import { cn } from '@/lib/class-names'
 import type { ExecutionHostId } from '../../../../../../shared/execution-host'
+import { REMOTE_HOSTS_ENABLED } from '../../../../../../shared/graphito-fork-disabled-features'
 import type { AddRemoteHostMode } from '../../host-admission/ssh/AddRemoteHostDialog'
 import {
   openWslHostsExperimentalSetting,
@@ -233,35 +234,42 @@ export function AddProjectHostSubmenu({
                 data-add-project-menu=""
                 data-workspace-board-preserve-open={preserveWorkspaceBoardOpen ? '' : undefined}
               >
-                <DropdownMenuItem onSelect={() => handleOpenAddHost('ssh')}>
-                  <span className="flex flex-col items-start gap-0.5 py-0.5">
-                    <span className="text-xs font-medium text-foreground">
-                      {t('auto.components.sidebar.AddRepoHostSelector.addSshHost', 'Add SSH host')}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground">
-                      {t(
-                        'auto.components.sidebar.AddRepoHostSelector.addSshHostDetail',
-                        'Use an existing machine over SSH.'
-                      )}
-                    </span>
-                  </span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleOpenAddHost('server')}>
-                  <span className="flex flex-col items-start gap-0.5 py-0.5">
-                    <span className="text-xs font-medium text-foreground">
-                      {t(
-                        'auto.components.sidebar.AddRepoHostSelector.addRemoteServer',
-                        'Add remote server'
-                      )}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground">
-                      {t(
-                        'auto.components.sidebar.AddRepoHostSelector.addRemoteServerDetail',
-                        'Pair with Orca running on another computer.'
-                      )}
-                    </span>
-                  </span>
-                </DropdownMenuItem>
+                {REMOTE_HOSTS_ENABLED ? (
+                  <>
+                    <DropdownMenuItem onSelect={() => handleOpenAddHost('ssh')}>
+                      <span className="flex flex-col items-start gap-0.5 py-0.5">
+                        <span className="text-xs font-medium text-foreground">
+                          {t(
+                            'auto.components.sidebar.AddRepoHostSelector.addSshHost',
+                            'Add SSH host'
+                          )}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground">
+                          {t(
+                            'auto.components.sidebar.AddRepoHostSelector.addSshHostDetail',
+                            'Use an existing machine over SSH.'
+                          )}
+                        </span>
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => handleOpenAddHost('server')}>
+                      <span className="flex flex-col items-start gap-0.5 py-0.5">
+                        <span className="text-xs font-medium text-foreground">
+                          {t(
+                            'auto.components.sidebar.AddRepoHostSelector.addRemoteServer',
+                            'Add remote server'
+                          )}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground">
+                          {t(
+                            'auto.components.sidebar.AddRepoHostSelector.addRemoteServerDetail',
+                            'Pair with Orca running on another computer.'
+                          )}
+                        </span>
+                      </span>
+                    </DropdownMenuItem>
+                  </>
+                ) : null}
                 {!wslHostsAcceptNewWork && wslHostsPausedNote ? (
                   <p className="px-2.5 py-1.5 text-2xs text-muted-foreground">
                     {wslHostsPausedNote}

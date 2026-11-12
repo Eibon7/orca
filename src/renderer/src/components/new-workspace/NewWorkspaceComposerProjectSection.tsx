@@ -19,6 +19,7 @@ import type {
   NewWorkspaceComposerCardProps
 } from './new-workspace-composer-card-props'
 import { EMPTY_PROJECT_OPTIONS } from './new-workspace-composer-card-props'
+import { REMOTE_HOSTS_ENABLED } from '../../../../shared/graphito-fork-disabled-features'
 
 type NewWorkspaceComposerProjectSectionProps = Pick<
   NewWorkspaceComposerCardProps,
@@ -224,8 +225,8 @@ export function NewWorkspaceComposerProjectSection({
               recipes={ephemeralVmRecipes}
               recipeValue={selectedEphemeralVmRecipeId}
               onRecipeChange={onEphemeralVmRecipeChange}
-              onAddSshHost={handleAddSshHost}
-              onAddRemoteServer={handleAddRemoteServer}
+              onAddSshHost={REMOTE_HOSTS_ENABLED ? handleAddSshHost : undefined}
+              onAddRemoteServer={REMOTE_HOSTS_ENABLED ? handleAddRemoteServer : undefined}
               onConnectHost={handleConnectRunTargetHost}
               onSetLocation={handleSetLocation}
             />
