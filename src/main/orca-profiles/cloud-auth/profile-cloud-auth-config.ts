@@ -43,6 +43,14 @@ export function getOrcaCloudAuthConfig(
   env: NodeJS.ProcessEnv = process.env,
   packaged: boolean = isPackagedOrcaBuild()
 ): { configured: true; config: OrcaCloudAuthConfig } | { configured: false; setupMessage: string } {
+  // Graphito internal fork: Orca Cloud (Lovecast's commercial backend — billing,
+  // account sync, org/connector/relay) is disabled unconditionally. This is the
+  // single chokepoint every cloud-auth consumer reads, so short-circuiting it
+  // here keeps profiles on the already-supported 'local' state without touching
+  // the sign-in/org/relay call sites themselves.
+  if (env.ORCA_CLOUD_API_URL === undefined) {
+    return { configured: false, setupMessage: 'Orca Cloud is disabled in this fork.' }
+  }
   // Plain HTTP token endpoints are development-only.
   const allowLoopbackHttp = !packaged
   const cleanEndpointUrl = (value: string | undefined): string | null =>
